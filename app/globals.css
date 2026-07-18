@@ -1,0 +1,368 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --wrap: 1200px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-cream text-navy-900 font-sans antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Shared layout wrapper */
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+/* Small uppercase eyebrow label used across sections */
+.eyebrow {
+  @apply text-xs font-semibold uppercase tracking-[0.18em] text-gold-600;
+}
+
+/* Oversized display type (the giant "Oxford" style words) */
+.display-huge {
+  @apply font-display font-black leading-[0.85] tracking-tight;
+  font-size: clamp(3.5rem, 13vw, 12rem);
+}
+
+.display-xl {
+  @apply font-display font-black leading-[0.9] tracking-tight;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+}
+
+/* Buttons */
+.btn {
+  @apply inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200;
+}
+.btn-primary {
+  @apply bg-navy-800 text-white hover:bg-navy-700;
+}
+.btn-light {
+  @apply bg-white text-navy-900 hover:bg-gold-200;
+}
+.btn-outline {
+  @apply border border-navy-800/20 text-navy-900 hover:border-navy-800 hover:bg-navy-800 hover:text-white;
+}
+
+/* Photo placeholder blocks (swap for real imagery in /public/images) */
+.photo {
+  @apply relative overflow-hidden bg-navy-800;
+  background-image:
+    radial-gradient(120% 120% at 0% 0%, rgba(200, 161, 90, 0.25), transparent 55%),
+    linear-gradient(135deg, #16295f 0%, #0b1531 60%, #080f24 100%);
+}
+.photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M0 39.5h40M39.5 0v40' stroke='%23ffffff' stroke-opacity='0.05' fill='none'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Hide scrollbar for horizontal carousels (still scrollable) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Screen-reader-only helper */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------- Academic pre-loader ---------------- */
+body.is-preloading {
+  overflow: hidden;
+}
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  background-image:
+    radial-gradient(120% 120% at 50% -10%, rgba(200, 161, 90, 0.22), transparent 55%),
+    linear-gradient(160deg, #16295f 0%, #0b1531 55%, #080f24 100%);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.75s ease, visibility 0.75s ease;
+}
+.preloader::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M0 39.5h40M39.5 0v40' stroke='%23ffffff' stroke-opacity='0.05' fill='none'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.preloader.is-done {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.preloader__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.preloader__seal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 176px;
+  height: 176px;
+}
+.preloader__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+  animation: preloaderSpin 3.2s linear infinite;
+}
+.preloader__ring circle {
+  fill: none;
+  stroke: rgba(200, 161, 90, 0.55);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 70 230;
+}
+
+.preloader__cap {
+  overflow: visible;
+}
+.preloader__cap .draw {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: preloaderDraw 1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.preloader__cap .board {
+  stroke: #d9bd83;
+}
+.preloader__cap .band {
+  stroke: #f6f4ef;
+  animation-delay: 0.5s;
+}
+.preloader__cap .cord {
+  stroke: #c8a15a;
+  animation-delay: 1s;
+}
+.preloader__cap .bead {
+  fill: #c8a15a;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: preloaderPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 1.35s forwards;
+}
+
+.preloader__word {
+  margin-top: 1.75rem;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 900;
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  opacity: 0;
+  animation: preloaderRise 0.7s ease 1.4s forwards;
+}
+.preloader__sub {
+  margin-top: 0.4rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.26em;
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 0;
+  animation: preloaderRise 0.7s ease 1.6s forwards;
+}
+.preloader__bar {
+  margin-top: 1.4rem;
+  width: 176px;
+  height: 2px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+.preloader__bar i {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #b7893f, #d9bd83);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: preloaderBar 2.1s cubic-bezier(0.5, 0, 0.1, 1) forwards;
+}
+
+@keyframes preloaderDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes preloaderSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes preloaderPop {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes preloaderRise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes preloaderBar {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader__ring {
+    animation: none;
+  }
+  .preloader__cap .draw,
+  .preloader__cap .bead,
+  .preloader__word,
+  .preloader__sub,
+  .preloader__bar i {
+    animation-duration: 0.01ms;
+    animation-delay: 0s;
+  }
+}
+
+/* ---------------- Custom cursor ---------------- */
+/* The native cursor icon stays visible; the dot + ring animate on top of it. */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  pointer-events: none;
+  border-radius: 9999px;
+  will-change: transform;
+  transform: translate3d(-50%, -50%, 0);
+}
+.cursor-dot {
+  height: 7px;
+  width: 7px;
+  background: #c8a15a;
+  transition: height 0.2s ease, width 0.2s ease, background-color 0.2s ease;
+}
+/* Dot swells and flips to navy over clickable elements — clear "target" look. */
+.cursor-dot.is-hovering {
+  height: 12px;
+  width: 12px;
+  background: #0b1531;
+}
+.cursor-ring {
+  height: 34px;
+  width: 34px;
+  border: 1.5px solid rgba(200, 161, 90, 0.7);
+  transition: width 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+    height 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.22s ease,
+    border-color 0.22s ease, box-shadow 0.22s ease;
+}
+/* Big, obvious change on hover: fills gold, thick border, soft glow. */
+.cursor-ring.is-hovering {
+  height: 64px;
+  width: 64px;
+  background: rgba(200, 161, 90, 0.22);
+  border-width: 2.5px;
+  border-color: #c8a15a;
+  box-shadow: 0 0 0 4px rgba(200, 161, 90, 0.15),
+    0 8px 24px rgba(200, 161, 90, 0.25);
+}
+.cursor-ring.is-clicking {
+  height: 26px;
+  width: 26px;
+}
+.cursor-ring.is-hovering.is-clicking {
+  height: 52px;
+  width: 52px;
+}
+
+/* Video cover: a 16:9 iframe cropped to fill its card, like object-fit: cover.
+   Uses container-query units so the crop math follows each card's own size. */
+.embed-cover {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+}
+.embed-cover iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100cqw, calc(100cqh * 16 / 9));
+  height: max(100cqh, calc(100cqw * 9 / 16));
+  border: 0;
+  pointer-events: none;
+}
+
+/* Reveal-on-scroll base state (progressively enhanced by JS) */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
