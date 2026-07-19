@@ -10,6 +10,8 @@ const nextConfig = {
     // Allow images served from the WordPress media library once WP is connected.
     // Add your WP host here, e.g. { protocol: 'https', hostname: 'cms.smkcbm.sch.id' }
     remotePatterns: [
+      // `**.host` only matches subdomains, so the apex needs its own entry.
+      { protocol: 'https', hostname: 'smkcbm.sch.id' },
       { protocol: 'https', hostname: '**.smkcbm.sch.id' },
       { protocol: 'http', hostname: 'localhost' },
     ],
