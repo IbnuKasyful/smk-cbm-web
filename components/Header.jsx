@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { PROGRAMS } from '@/lib/mock-data';
@@ -16,10 +17,9 @@ const NAV = [
     })),
   },
   { label: 'Fasilitas', href: '/fasilitas' },
-  { label: 'Info PSB', href: '#psb' },
-  { label: 'Kegiatan', href: '#kegiatan' },
-  { label: 'Berita', href: '#berita' },
-  { label: 'Kontak', href: '#kontak' },
+  { label: 'CFA', href: '/cfa' },
+  { label: 'Berita', href: '/news' },
+  { label: 'Kontak', href: '/kontak' },
 ];
 
 function Chevron({ className = '' }) {
@@ -53,14 +53,13 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled
           ? 'bg-cream/90 backdrop-blur-md shadow-[0_1px_0_rgba(11,21,49,0.08)]'
           : 'bg-transparent'
-      }`}
+        }`}
     >
       <div className="wrap flex h-16 items-center justify-between gap-4">
-        <a href="#top" className="flex items-center gap-2.5 text-navy-900">
+        <Link href="/" className="flex items-center gap-2.5 text-navy-900">
           <Image src="/logo.png" alt="Logo SMK CBM" width={48} height={48} className="h-10 w-auto object-contain" />
           <span className="flex flex-col leading-none">
             <span className="font-display text-lg font-black tracking-tight">
@@ -70,7 +69,7 @@ export default function Header() {
               Citra Bangsa Mandiri
             </span>
           </span>
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-6 lg:flex">
           {NAV.map((item) =>
@@ -116,10 +115,10 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <a href="#psb" className="btn btn-outline hidden sm:inline-flex">
+          <Link href="/#psb" className="btn btn-outline hidden sm:inline-flex">
             Info PPDB
-          </a>
-          <a href="#kontak" className="btn btn-primary hidden sm:inline-flex">
+          </Link>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSc3Fpb22YfUTF4GnwQEd5LvtTTl9pduG7-9JdHYfUtTAONQLA/viewform" target="_blank" rel="noopener noreferrer" className="btn btn-primary hidden sm:inline-flex">
             Daftar
           </a>
           <button
@@ -131,19 +130,16 @@ export default function Header() {
           >
             <span className="relative block h-3.5 w-4">
               <span
-                className={`absolute left-0 top-0 h-0.5 w-4 bg-current transition-transform ${
-                  open ? 'translate-y-1.5 rotate-45' : ''
-                }`}
+                className={`absolute left-0 top-0 h-0.5 w-4 bg-current transition-transform ${open ? 'translate-y-1.5 rotate-45' : ''
+                  }`}
               />
               <span
-                className={`absolute left-0 top-1.5 h-0.5 w-4 bg-current transition-opacity ${
-                  open ? 'opacity-0' : ''
-                }`}
+                className={`absolute left-0 top-1.5 h-0.5 w-4 bg-current transition-opacity ${open ? 'opacity-0' : ''
+                  }`}
               />
               <span
-                className={`absolute left-0 top-3 h-0.5 w-4 bg-current transition-transform ${
-                  open ? '-translate-y-1.5 -rotate-45' : ''
-                }`}
+                className={`absolute left-0 top-3 h-0.5 w-4 bg-current transition-transform ${open ? '-translate-y-1.5 -rotate-45' : ''
+                  }`}
               />
             </span>
           </button>
@@ -195,7 +191,7 @@ export default function Header() {
                 </a>
               )
             )}
-            <a href="#kontak" onClick={() => setOpen(false)} className="btn btn-primary mt-4 justify-center">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSc3Fpb22YfUTF4GnwQEd5LvtTTl9pduG7-9JdHYfUtTAONQLA/viewform" target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="btn btn-primary mt-4 justify-center">
               Daftar PPDB
             </a>
           </nav>

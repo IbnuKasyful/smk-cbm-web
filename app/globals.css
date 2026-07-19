@@ -68,6 +68,39 @@ body {
   pointer-events: none;
 }
 
+/* Article body styling for CMS-authored HTML (CFA single post) */
+.prose-cfa {
+  @apply text-base leading-relaxed text-navy-800/90;
+}
+.prose-cfa h2 {
+  @apply mt-10 font-display text-2xl font-black leading-snug text-navy-900;
+}
+.prose-cfa h3 {
+  @apply mt-8 text-lg font-bold text-navy-900;
+}
+.prose-cfa p {
+  @apply mt-5;
+}
+.prose-cfa ul,
+.prose-cfa ol {
+  @apply mt-5 space-y-2 pl-5;
+}
+.prose-cfa ul {
+  @apply list-disc marker:text-gold-500;
+}
+.prose-cfa ol {
+  @apply list-decimal marker:text-gold-500;
+}
+.prose-cfa a {
+  @apply font-medium text-navy-900 underline decoration-gold-500 decoration-2 underline-offset-4;
+}
+.prose-cfa img {
+  @apply mt-8 rounded-2xl;
+}
+.prose-cfa blockquote {
+  @apply mt-6 border-l-4 border-gold-500 pl-5 italic text-navy-800/80;
+}
+
 /* Hide scrollbar for horizontal carousels (still scrollable) */
 .no-scrollbar {
   -ms-overflow-style: none;
