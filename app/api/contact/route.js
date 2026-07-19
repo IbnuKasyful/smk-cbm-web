@@ -9,7 +9,8 @@
 
 import { NextResponse } from 'next/server';
 
-export const runtime = 'edge';
+// No `runtime = 'edge'` here: the OpenNext Cloudflare adapter rejects Next's
+// edge runtime, and on Workers this route already runs at the edge anyway.
 
 const WP_URL = process.env.WP_URL?.replace(/\/$/, '');
 const PROVIDER = process.env.CONTACT_FORM_PROVIDER || 'cf7';
@@ -65,8 +66,12 @@ export async function POST(request) {
     );
   }
 
-  // No CMS connected yet — accept and log so the UX works in development.
-  if (!WP_URL) {
+  // Accept-and-log mode. Used when no CMS is connected, and also when the CMS
+  // is connected but no form has been set up on it yet — smkcbm.sch.id has
+  // Contact Form 7 active but no form created, so CF7_FORM_ID cannot be filled
+  // in until someone creates one in wp-admin → Contact → Forms. Failing soft
+  // here keeps the front-end form usable instead of returning 502 to visitors.
+  if (!WP_URL || (PROVIDER === 'cf7' && !CF7_FORM_ID)) {
     console.info('[contact] (mock) submission received:', {
       name: `${body.firstName} ${body.lastName || ''}`.trim(),
       email: body.email,

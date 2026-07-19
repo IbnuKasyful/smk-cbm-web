@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "smk-cbm-web",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-07-19",
+  // nodejs_compat is required by the OpenNext adapter.
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  // These reach the Next.js runtime as process.env.* via the OpenNext adapter.
+  // They are plain config, not credentials: WP_URL is the public CMS origin and
+  // CF7_FORM_ID is a form number visible in any page that embeds the form.
+  // Keeping them here (rather than as `wrangler secret`) means a fresh deploy
+  // or a new machine cannot silently ship without them — which is exactly how
+  // production ended up rendering mock data instead of WordPress content.
+  //
+  // CF7_FORM_ID is intentionally empty until a Contact Form 7 form exists in
+  // wp-admin; /api/contact accepts and logs submissions while it is blank.
+  "vars": {
+    "WP_URL": "https://smkcbm.sch.id",
+    "CONTACT_FORM_PROVIDER": "cf7",
+    "CF7_FORM_ID": ""
+  }
+}

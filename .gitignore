@@ -10,3 +10,7 @@
 
 # Local tooling
 /.claude
+
+# Cloudflare (OpenNext build output + local wrangler state)
+/.open-next
+/.wrangler
