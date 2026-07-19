@@ -5,6 +5,9 @@ import CustomCursor from '@/components/CustomCursor';
 
 export const metadata = {
   metadataBase: new URL('https://smkcbm.sch.id'),
+  icons: {
+    icon: '/icon.png',
+  },
   title: {
     default: `${SCHOOL.name} ${SCHOOL.city} — ${SCHOOL.tagline}`,
     template: `%s — ${SCHOOL.shortName}`,

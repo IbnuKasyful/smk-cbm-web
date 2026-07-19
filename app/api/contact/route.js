@@ -9,6 +9,8 @@
 
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge';
+
 const WP_URL = process.env.WP_URL?.replace(/\/$/, '');
 const PROVIDER = process.env.CONTACT_FORM_PROVIDER || 'cf7';
 const CF7_FORM_ID = process.env.CF7_FORM_ID;
