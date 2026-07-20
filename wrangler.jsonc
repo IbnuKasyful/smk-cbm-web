@@ -19,11 +19,11 @@
   // or a new machine cannot silently ship without them — which is exactly how
   // production ended up rendering mock data instead of WordPress content.
   //
-  // CF7_FORM_ID is intentionally empty until a Contact Form 7 form exists in
-  // wp-admin; /api/contact accepts and logs submissions while it is blank.
+  // CF7_FORM_ID is the "Formulir Kontak Website" form (wp-admin post=1810).
+  // While it is blank, /api/contact accepts and logs submissions instead.
   "vars": {
     "WP_URL": "https://smkcbm.sch.id",
     "CONTACT_FORM_PROVIDER": "cf7",
-    "CF7_FORM_ID": ""
+    "CF7_FORM_ID": "1810"
   }
 }

@@ -30,6 +30,12 @@ function isValid(body) {
 
 async function submitToCF7(body) {
   const form = new FormData();
+  // CF7 6.x rejects the feedback request with `wpcf7_unit_tag_not_found`
+  // unless these hidden fields (normally emitted by the rendered form) are
+  // present. The unit tag only has to match `wpcf7-f{id}-...`; the "-o1"
+  // offset is what a single on-page form instance would produce.
+  form.append('_wpcf7', CF7_FORM_ID);
+  form.append('_wpcf7_unit_tag', `wpcf7-f${CF7_FORM_ID}-o1`);
   form.append('your-name', `${body.firstName} ${body.lastName || ''}`.trim());
   form.append('your-email', body.email);
   form.append('your-phone', body.phone || '');
@@ -38,12 +44,33 @@ async function submitToCF7(body) {
 
   const res = await fetch(
     `${WP_URL}/wp-json/contact-form-7/v1/contact-forms/${CF7_FORM_ID}/feedback`,
-    { method: 'POST', body: form }
+    {
+      method: 'POST',
+      body: form,
+      // CF7 6.x flags any submission with an empty/absent User-Agent as spam
+      // and returns status:"spam". The Workers runtime sends no UA by default,
+      // so a browser-like UA is required for the server-to-server call to be
+      // accepted. (Content-Type is left unset so fetch keeps the multipart
+      // boundary it generates for the FormData body.)
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+      },
+    }
   );
-  const data = await res.json();
-  // CF7 returns { status: 'mail_sent' | 'validation_failed' | ... }
+  const raw = await res.text();
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    throw new Error(`CF7 non-JSON ${res.status}: ${raw.slice(0, 300)}`);
+  }
+  // CF7 returns { status: 'mail_sent' | 'validation_failed' | 'spam' | ... }
   if (data.status !== 'mail_sent') {
-    throw new Error(data.message || 'Formulir ditolak oleh server.');
+    // Full detail (invalid fields, spam flag) goes to the server log only.
+    throw new Error(
+      `CF7 ${res.status} ${data.status || data.code || '?'}: ${data.message || ''} ${JSON.stringify(data.invalid_fields || [])}`
+    );
   }
   return data;
 }
