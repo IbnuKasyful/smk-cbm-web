@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import QuestionForm from '@/components/QuestionForm';
+import NewsCategories from '@/components/NewsCategories';
 import { getPosts } from '@/lib/wordpress';
 
 export const metadata = {
@@ -44,12 +45,9 @@ export default async function NewsIndex() {
   const posts = await getPosts({ limit: 24 });
 
   const [featured, ...rest] = posts;
-  const collage = posts.slice(0, 3);
   const spotlight = posts.slice(0, 3);
   const sideList = rest.slice(0, 3);
-  const latest = rest.slice(0, 4);
   const popular = posts.slice(0, 3);
-  const categories = ['Semua', ...new Set(posts.map((p) => p.category))];
 
   return (
     <>
@@ -90,23 +88,23 @@ export default async function NewsIndex() {
               </div>
             </Reveal>
 
-            {/* Overlapping photo collage — echoes the reference's stair panels. */}
+            {/* Overlapping photo collage — echoes the reference's stair panels.
+                Plain images (no hyperlink): purely decorative hero visuals. */}
             <Reveal delay={120} className="hidden sm:block">
               <div className="flex items-center justify-center gap-4">
-                {collage.map((post, i) => (
-                  <Link
-                    key={post.id}
-                    href={`/news/${post.slug}`}
-                    className={`group block w-1/3 overflow-hidden rounded-[2rem] shadow-lg shadow-navy-900/10 ring-1 ring-navy-900/5 ${
+                {[
+                  '/images/hero-news-1.jpg',
+                  '/images/hero-news-2.jpg',
+                  '/images/hero-news-3.jpg'
+                ].map((src, i) => (
+                  <div
+                    key={i}
+                    className={`w-1/3 overflow-hidden rounded-[2rem] shadow-lg shadow-navy-900/10 ring-1 ring-navy-900/5 ${
                       i === 1 ? '-translate-y-6' : 'translate-y-4'
                     }`}
                   >
-                    <Thumb
-                      post={post}
-                      className="aspect-[3/5]"
-                      imgClass="transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </Link>
+                    <Thumb post={{ image: src }} className="aspect-[3/5]" />
+                  </div>
                 ))}
               </div>
             </Reveal>
@@ -151,22 +149,6 @@ export default async function NewsIndex() {
                     </div>
                   </Link>
                 </Reveal>
-              ))}
-            </div>
-
-            {/* Category filter bar (decorative, mirrors the reference). */}
-            <div className="no-scrollbar mt-12 flex gap-8 overflow-x-auto border-t border-navy-900/10 pt-6 text-sm">
-              {categories.map((cat, i) => (
-                <span
-                  key={cat}
-                  className={`whitespace-nowrap font-medium ${
-                    i === 0
-                      ? 'text-navy-900 underline decoration-gold-500 decoration-2 underline-offset-8'
-                      : 'text-navy-700/50'
-                  }`}
-                >
-                  {cat}
-                </span>
               ))}
             </div>
           </section>
@@ -246,58 +228,14 @@ export default async function NewsIndex() {
           </section>
         )}
 
-        {/* ---------------- Berita Terbaru (editorial rows) ---------------- */}
-        {latest.length > 0 && (
+        {/* ---------------- Berita Terbaru (editorial rows, filterable) ---------------- */}
+        {rest.length > 0 && (
           <section id="terbaru" className="wrap border-t border-navy-900/10 py-16">
             <h2 className="mb-12 font-display text-3xl font-black text-navy-900 sm:text-4xl">
               Berita &amp; Artikel Terbaru
             </h2>
 
-            <div className="flex flex-col gap-12">
-              {latest.map((post, i) => (
-                <Reveal key={post.id} delay={(i % 2) * 90}>
-                  <article
-                    className={`grid items-center gap-6 sm:grid-cols-2 sm:gap-10 ${
-                      i % 2 === 1 ? 'sm:[&>a]:order-2' : ''
-                    }`}
-                  >
-                    <Link
-                      href={`/news/${post.slug}`}
-                      className="group block overflow-hidden rounded-2xl"
-                    >
-                      <Thumb
-                        post={post}
-                        className="aspect-[16/10] w-full"
-                        imgClass="transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </Link>
-                    <div>
-                      <p className="eyebrow mb-3">{post.category}</p>
-                      <Link href={`/news/${post.slug}`} className="group">
-                        <h3 className="font-display text-2xl font-black leading-tight text-navy-900 group-hover:text-navy-700 sm:text-[1.75rem]">
-                          {post.title}
-                        </h3>
-                      </Link>
-                      <div className="mt-3 flex items-center gap-3 text-xs text-navy-700/50">
-                        <span>{formatDate(post.date)}</span>
-                        <span aria-hidden>·</span>
-                        <span>{post.author}</span>
-                      </div>
-                      <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-navy-700/70">
-                        {post.excerpt}
-                      </p>
-                      <Link
-                        href={`/news/${post.slug}`}
-                        className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-navy-800 hover:text-gold-600"
-                      >
-                        Baca selengkapnya
-                        <span aria-hidden>→</span>
-                      </Link>
-                    </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
+            <NewsCategories posts={rest} />
           </section>
         )}
 

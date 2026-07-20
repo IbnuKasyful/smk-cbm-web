@@ -129,13 +129,27 @@ export default async function CfaPage({ searchParams }) {
             {CFA.intro}
           </p>
 
-          <div className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            {visible.map((item) => (
-              <Card key={item.id} item={item} />
-            ))}
-          </div>
+          {items.length > 0 ? (
+            <>
+              <div className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+                {visible.map((item) => (
+                  <Card key={item.id} item={item} />
+                ))}
+              </div>
 
-          <Pagination page={page} totalPages={totalPages} />
+              <Pagination page={page} totalPages={totalPages} />
+            </>
+          ) : (
+            <div className="mt-12 rounded-3xl bg-cream px-6 py-16 text-center ring-1 ring-navy-900/5">
+              <p className="font-display text-xl font-black text-navy-900">
+                Belum ada lomba
+              </p>
+              <p className="mt-2 text-sm text-navy-700/70">
+                Cabang lomba CFA akan segera diumumkan. Nantikan informasi
+                selanjutnya di halaman ini.
+              </p>
+            </div>
+          )}
         </section>
       </main>
       <Footer />
