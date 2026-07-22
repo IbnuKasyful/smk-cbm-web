@@ -19,35 +19,18 @@ function Check() {
   );
 }
 
-function Chevron({ className = '' }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={`h-4 w-4 shrink-0 transition-transform duration-300 group-open:rotate-180 ${className}`}
-      aria-hidden="true"
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  );
-}
-
-// Collapsible information card. Native <details> gives us "closed by default",
-// keyboard support, and in-page find — no client-side JS needed.
+// Always-open information card. Header stays for scanning; content is never
+// hidden behind a toggle.
 function InfoCard({ title, hint, dark = false, children }) {
   return (
-    <details
-      className={`group overflow-hidden rounded-2xl ${
+    <div
+      className={`overflow-hidden rounded-2xl ${
         dark
           ? 'bg-gradient-to-br from-navy-700 to-navy-900 text-white ring-1 ring-white/10'
           : 'bg-white shadow-[0_1px_0_rgba(11,21,49,0.06)] ring-1 ring-navy-900/5'
       }`}
     >
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-6 [&::-webkit-details-marker]:hidden">
+      <div className="flex items-center justify-between gap-4 p-6">
         <span className="min-w-0">
           <span
             className={`block font-display text-lg font-bold ${
@@ -66,8 +49,7 @@ function InfoCard({ title, hint, dark = false, children }) {
             </span>
           )}
         </span>
-        <Chevron className={dark ? 'text-gold-400' : 'text-navy-700/60'} />
-      </summary>
+      </div>
 
       <div
         className={`border-t px-6 py-5 ${
@@ -76,7 +58,7 @@ function InfoCard({ title, hint, dark = false, children }) {
       >
         {children}
       </div>
-    </details>
+    </div>
   );
 }
 
@@ -173,29 +155,28 @@ export default function Admissions() {
                 </p>
                 <p className="mt-1 text-sm text-white/60">{ADMISSION.feeNote}</p>
               </div>
-            </InfoCard>
-          </Reveal>
 
-          {/* Kept outside the accordions so the CTA is never hidden. */}
-          <Reveal delay={240} className="mt-2">
-            <a
-              href={ADMISSION.registerUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary w-full justify-center"
-            >
-              Daftar Sekarang
-              <span aria-hidden>→</span>
-            </a>
-            <p className="mt-4 text-center text-xs text-navy-700/60">
-              Informasi lebih lanjut:{' '}
-              <a
-                href={`tel:${SCHOOL.phone.replace(/[^0-9]/g, '')}`}
-                className="font-semibold text-navy-900 hover:text-gold-600"
-              >
-                {SCHOOL.phone}
-              </a>
-            </p>
+              <div className="mt-6 border-t border-white/10 pt-6">
+                <a
+                  href={ADMISSION.registerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn w-full justify-center bg-gold-500 text-navy-900 hover:bg-gold-400"
+                >
+                  Daftar Sekarang
+                  <span aria-hidden>→</span>
+                </a>
+                <p className="mt-4 text-center text-xs text-white/60">
+                  Informasi lebih lanjut:{' '}
+                  <a
+                    href={`tel:${SCHOOL.phone.replace(/[^0-9]/g, '')}`}
+                    className="font-semibold text-white hover:text-gold-400"
+                  >
+                    {SCHOOL.phone}
+                  </a>
+                </p>
+              </div>
+            </InfoCard>
           </Reveal>
         </div>
       </div>

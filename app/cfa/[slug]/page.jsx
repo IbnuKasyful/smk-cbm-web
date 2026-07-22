@@ -133,7 +133,7 @@ export default async function CfaArticlePage({ params }) {
             </div>
 
             <div
-              className="prose-cfa mt-10"
+              className="richtext mt-10"
               dangerouslySetInnerHTML={{ __html: item.content }}
             />
           </article>

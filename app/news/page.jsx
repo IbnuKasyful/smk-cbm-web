@@ -89,21 +89,41 @@ export default async function NewsIndex() {
             </Reveal>
 
             {/* Overlapping photo collage — echoes the reference's stair panels.
+                Each student breaks out of the top of their navy frame for a 3D,
+                pop-out-of-the-card look. The frame clips only its own grid
+                pattern; the cut-out figure lives on a separate, unclipped layer.
                 Plain images (no hyperlink): purely decorative hero visuals. */}
             <Reveal delay={120} className="hidden sm:block">
-              <div className="flex items-center justify-center gap-4">
+              <div className="flex items-end justify-center gap-4">
                 {[
-                  '/images/hero-news-1.jpg',
-                  '/images/hero-news-2.jpg',
-                  '/images/hero-news-3.jpg'
-                ].map((src, i) => (
+                  { src: '/images/girl1_news.png', height: 'h-[116%]' },
+                  { src: '/images/boy_news.png', height: 'h-[122%]' },
+                  { src: '/images/girl2_news.png', height: 'h-[116%]' },
+                ].map((item, i) => (
                   <div
                     key={i}
-                    className={`w-1/3 overflow-hidden rounded-[2rem] shadow-lg shadow-navy-900/10 ring-1 ring-navy-900/5 ${
-                      i === 1 ? '-translate-y-6' : 'translate-y-4'
-                    }`}
+                    className={`relative w-1/3 ${i === 1 ? '-translate-y-8' : 'translate-y-4'
+                      }`}
                   >
-                    <Thumb post={{ image: src }} className="aspect-[3/5]" />
+                    {/* Navy card — overflow-hidden clips the grid, not the student */}
+                    <div className="relative aspect-[3/5] overflow-hidden rounded-[2rem] bg-gradient-to-b from-navy-800 to-navy-950 shadow-lg shadow-navy-900/20 ring-1 ring-navy-900/10">
+                      <div
+                        aria-hidden
+                        className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] [background-size:26px_26px]"
+                      />
+                      {/* Soft glow rising behind the figure's head */}
+                      <div
+                        aria-hidden
+                        className="absolute inset-x-0 top-0 h-1/2 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.16),transparent_70%)]"
+                      />
+                    </div>
+                    {/* Cut-out figure pops above the top edge of the card */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.src}
+                      alt=""
+                      className={`pointer-events-none absolute bottom-0 left-1/2 w-auto max-w-none -translate-x-1/2 object-contain object-bottom drop-shadow-[0_20px_25px_rgba(15,23,42,0.35)] ${item.height}`}
+                    />
                   </div>
                 ))}
               </div>

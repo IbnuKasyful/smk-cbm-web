@@ -69,7 +69,7 @@ export default async function ArticlePage({ params }) {
 
           {/* WordPress returns HTML in post.content; mock data returns plain text. */}
           <div
-            className="prose-cbm mt-10 space-y-5 text-base leading-relaxed text-navy-800/90"
+            className="richtext mt-10"
             dangerouslySetInnerHTML={{
               __html: post.content?.startsWith('<')
                 ? post.content

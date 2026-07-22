@@ -62,17 +62,30 @@ export default async function ProgramPage({ params }) {
           <h1 className="mt-3 max-w-4xl font-display text-3xl font-black leading-tight text-navy-900 sm:text-5xl sm:leading-[1.05]">
             {program.name}
           </h1>
-          <p className="mt-6 max-w-3xl text-base leading-relaxed text-navy-700/80 sm:text-lg">
-            {program.overview || program.description}
-          </p>
 
-          <div className="photo mt-10 aspect-[16/7] rounded-2xl">
-            <div className="absolute inset-0 flex items-end rounded-2xl bg-gradient-to-t from-navy-950/70 to-transparent p-6 sm:p-8">
-              <span className="font-display text-2xl font-black text-white/95 sm:text-3xl">
-                {program.short}
-              </span>
-            </div>
+          {/* Featured image from the WordPress post; falls back to the branded
+              gradient placeholder (.photo) when the post has no image. */}
+          <div className="photo relative mt-8 aspect-[16/7] overflow-hidden rounded-2xl">
+            {program.image && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={program.image}
+                alt={program.name}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            )}
           </div>
+
+          {program.content ? (
+            <div
+              className="richtext mt-6 max-w-3xl"
+              dangerouslySetInnerHTML={{ __html: program.content }}
+            />
+          ) : (
+            <p className="mt-6 max-w-3xl text-base leading-relaxed text-navy-700/80 sm:text-lg">
+              {program.overview || program.description}
+            </p>
+          )}
 
           {/* Detail columns */}
           <div className="mt-12 grid gap-6 lg:grid-cols-2">

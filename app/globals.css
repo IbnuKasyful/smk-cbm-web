@@ -53,6 +53,57 @@ body {
   @apply border border-navy-800/20 text-navy-900 hover:border-navy-800 hover:bg-navy-800 hover:text-white;
 }
 
+/* Rich text rendered from the WordPress CMS (program/news prose). Styles the
+   raw HTML — headings, paragraphs, lists — so the CMS formatting survives. */
+.richtext {
+  @apply text-navy-700/80;
+}
+.richtext > :first-child {
+  margin-top: 0;
+}
+.richtext p {
+  @apply my-4 text-base leading-relaxed sm:text-lg;
+}
+.richtext h2,
+.richtext h3,
+.richtext h4 {
+  @apply mt-8 mb-3 font-display font-bold text-navy-900;
+}
+.richtext h2 {
+  @apply text-2xl;
+}
+.richtext h3 {
+  @apply text-xl;
+}
+.richtext h4 {
+  @apply text-lg;
+}
+.richtext ul,
+.richtext ol {
+  @apply my-4 space-y-2 pl-5;
+}
+.richtext ul {
+  @apply list-disc marker:text-gold-600;
+}
+.richtext ol {
+  @apply list-decimal marker:text-gold-600;
+}
+.richtext li {
+  @apply pl-1 text-base leading-relaxed sm:text-lg;
+}
+.richtext strong {
+  @apply font-semibold text-navy-900;
+}
+.richtext a {
+  @apply font-semibold text-navy-900 underline decoration-gold-600/40 underline-offset-2 hover:text-gold-600;
+}
+.richtext img {
+  @apply my-6 rounded-2xl;
+}
+.richtext blockquote {
+  @apply my-6 border-l-4 border-gold-500 pl-5 italic text-navy-800/80;
+}
+
 /* Photo placeholder blocks (swap for real imagery in /public/images) */
 .photo {
   @apply relative overflow-hidden bg-navy-800;
@@ -69,38 +120,6 @@ body {
 }
 
 /* Article body styling for CMS-authored HTML (CFA single post) */
-.prose-cfa {
-  @apply text-base leading-relaxed text-navy-800/90;
-}
-.prose-cfa h2 {
-  @apply mt-10 font-display text-2xl font-black leading-snug text-navy-900;
-}
-.prose-cfa h3 {
-  @apply mt-8 text-lg font-bold text-navy-900;
-}
-.prose-cfa p {
-  @apply mt-5;
-}
-.prose-cfa ul,
-.prose-cfa ol {
-  @apply mt-5 space-y-2 pl-5;
-}
-.prose-cfa ul {
-  @apply list-disc marker:text-gold-500;
-}
-.prose-cfa ol {
-  @apply list-decimal marker:text-gold-500;
-}
-.prose-cfa a {
-  @apply font-medium text-navy-900 underline decoration-gold-500 decoration-2 underline-offset-4;
-}
-.prose-cfa img {
-  @apply mt-8 rounded-2xl;
-}
-.prose-cfa blockquote {
-  @apply mt-6 border-l-4 border-gold-500 pl-5 italic text-navy-800/80;
-}
-
 /* Hide scrollbar for horizontal carousels (still scrollable) */
 .no-scrollbar {
   -ms-overflow-style: none;
