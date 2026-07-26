@@ -14,3 +14,7 @@
 # Cloudflare (OpenNext build output + local wrangler state)
 /.open-next
 /.wrangler
+
+# DirectAdmin deploy bundle (scripts/package-deploy.ps1)
+/deploy
+/deploy.zip

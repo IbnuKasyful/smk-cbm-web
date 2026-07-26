@@ -39,18 +39,22 @@ body {
   font-size: clamp(2.5rem, 7vw, 5rem);
 }
 
-/* Buttons */
-.btn {
-  @apply inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200;
-}
-.btn-primary {
-  @apply bg-navy-800 text-white hover:bg-navy-700;
-}
-.btn-light {
-  @apply bg-white text-navy-900 hover:bg-gold-200;
-}
-.btn-outline {
-  @apply border border-navy-800/20 text-navy-900 hover:border-navy-800 hover:bg-navy-800 hover:text-white;
+/* Buttons — kept in the components layer so utilities written alongside them
+   (hidden, px-5, w-full, …) still win. Unlayered they'd sit after the
+   utilities layer and silently override it. */
+@layer components {
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200;
+  }
+  .btn-primary {
+    @apply bg-navy-800 text-white hover:bg-navy-700;
+  }
+  .btn-light {
+    @apply bg-white text-navy-900 hover:bg-gold-200;
+  }
+  .btn-outline {
+    @apply border border-navy-800/20 text-navy-900 hover:border-navy-800 hover:bg-navy-800 hover:text-white;
+  }
 }
 
 /* Rich text rendered from the WordPress CMS (program/news prose). Styles the
@@ -102,6 +106,33 @@ body {
 }
 .richtext blockquote {
   @apply my-6 border-l-4 border-gold-500 pl-5 italic text-navy-800/80;
+}
+
+/* WordPress column blocks (Visi/Misi, Pendaftaran/Kontak on the CFA page).
+   The headless site never loads WP's own layout CSS, so lay them out as a neat
+   two-column grid of cards ourselves. */
+.richtext .wp-block-columns {
+  @apply my-8 grid gap-5 sm:grid-cols-2;
+}
+.richtext .wp-block-column {
+  @apply min-w-0 rounded-2xl bg-cream p-6 ring-1 ring-navy-900/5;
+}
+.richtext .wp-block-column > :first-child {
+  margin-top: 0;
+}
+.richtext .wp-block-column :last-child {
+  margin-bottom: 0;
+}
+
+/* Lead pullquote at the top of the CFA post. */
+.richtext .wp-block-pullquote {
+  @apply my-8 text-center;
+}
+.richtext .wp-block-pullquote blockquote {
+  @apply border-0 pl-0;
+}
+.richtext .wp-block-pullquote p {
+  @apply font-display text-xl text-navy-900 sm:text-2xl;
 }
 
 /* Photo placeholder blocks (swap for real imagery in /public/images) */

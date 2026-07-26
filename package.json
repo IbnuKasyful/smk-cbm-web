@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "package": "powershell -ExecutionPolicy Bypass -File ./scripts/package-deploy.ps1",
+    "deploy:build": "next build && npm run package",
     "cf:build": "opennextjs-cloudflare build",
     "cf:preview": "opennextjs-cloudflare build && wrangler dev",
     "cf:deploy": "opennextjs-cloudflare build && wrangler deploy"

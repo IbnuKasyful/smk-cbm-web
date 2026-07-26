@@ -2,14 +2,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { getCfaItems, CFA } from '@/lib/wordpress';
+import ShareButtons from '@/components/ShareButtons';
+import { getCfaPost, CFA } from '@/lib/wordpress';
+import { parseCfaContent } from '@/lib/cfa-content';
 
 export const metadata = {
   title: 'CFA — Competition for Achievement',
   description: CFA.intro,
 };
-
-const PER_PAGE = 9;
 
 const fmtDate = (iso) =>
   new Date(iso).toLocaleDateString('id-ID', {
@@ -18,102 +18,35 @@ const fmtDate = (iso) =>
     year: 'numeric',
   });
 
-function Card({ item }) {
+const iconProps = {
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 1.7,
+  strokeLinecap: 'round',
+  strokeLinejoin: 'round',
+  className: 'h-3.5 w-3.5',
+  'aria-hidden': true,
+};
+
+function Chip({ icon, children }) {
   return (
-    <article className="group">
-      <Link href={`/cfa/${item.slug}`} className="block">
-        <div className="photo relative aspect-[4/3] overflow-hidden rounded-2xl">
-          {item.image ? (
-            <Image
-              src={item.image}
-              alt={item.title}
-              fill
-              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-            />
-          ) : (
-            <span className="absolute inset-x-0 bottom-4 text-center text-[11px] font-medium uppercase tracking-[0.16em] text-white/45">
-              {item.category}
-            </span>
-          )}
-        </div>
-        <h2 className="mt-4 text-base font-bold leading-snug text-navy-900 transition-colors group-hover:text-gold-600">
-          {item.title}
-        </h2>
-      </Link>
-      <p className="mt-1.5 text-xs text-navy-700/60">
-        oleh <span className="text-gold-600">{item.author}</span> pada{' '}
-        <span className="text-gold-600">{fmtDate(item.date)}</span>
-      </p>
-    </article>
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-medium text-navy-800 ring-1 ring-navy-900/10">
+      {icon}
+      {children}
+    </span>
   );
 }
 
-function Pagination({ page, totalPages }) {
-  if (totalPages < 2) return null;
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-  const base =
-    'inline-flex h-9 min-w-9 items-center justify-center gap-1 rounded-full px-3 text-sm font-semibold transition-colors';
-
-  return (
-    <nav
-      aria-label="Navigasi halaman"
-      className="mt-14 flex items-center justify-center gap-2 sm:justify-end"
-    >
-      {page > 1 ? (
-        <Link href={`/cfa?page=${page - 1}`} className={`${base} text-navy-800 hover:bg-navy-900/5`}>
-          <span aria-hidden>←</span> Sebelumnya
-        </Link>
-      ) : (
-        <span className={`${base} text-navy-900/25`} aria-disabled="true">
-          <span aria-hidden>←</span> Sebelumnya
-        </span>
-      )}
-
-      {pages.map((p) => (
-        <Link
-          key={p}
-          href={`/cfa?page=${p}`}
-          aria-current={p === page ? 'page' : undefined}
-          className={`${base} ${
-            p === page
-              ? 'bg-navy-900 text-white'
-              : 'text-navy-800 hover:bg-navy-900/5'
-          }`}
-        >
-          {p}
-        </Link>
-      ))}
-
-      {page < totalPages ? (
-        <Link
-          href={`/cfa?page=${page + 1}`}
-          className={`${base} bg-gold-400 text-navy-900 hover:bg-gold-500`}
-        >
-          Berikutnya <span aria-hidden>→</span>
-        </Link>
-      ) : (
-        <span className={`${base} text-navy-900/25`} aria-disabled="true">
-          Berikutnya <span aria-hidden>→</span>
-        </span>
-      )}
-    </nav>
-  );
-}
-
-export default async function CfaPage({ searchParams }) {
-  const items = await getCfaItems();
-  const totalPages = Math.max(1, Math.ceil(items.length / PER_PAGE));
-
-  const requested = Number((await searchParams)?.page) || 1;
-  const page = Math.min(Math.max(1, requested), totalPages);
-  const visible = items.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+export default async function CfaPage() {
+  const post = await getCfaPost();
+  const { head, competitions, tail } = parseCfaContent(post?.content ?? '');
 
   return (
     <>
       <Header />
       <main className="pt-28">
-        <section className="wrap pb-24 pt-8 sm:pt-12">
+        <article className="wrap max-w-3xl pb-24 pt-8 sm:pt-12">
           <Link
             href="/"
             className="text-sm font-medium text-navy-700/70 transition-colors hover:text-navy-900"
@@ -123,34 +56,109 @@ export default async function CfaPage({ searchParams }) {
 
           <p className="eyebrow mt-8">{CFA.subtitle}</p>
           <h1 className="mt-3 font-display text-4xl font-black leading-[1.05] text-navy-900 sm:text-5xl">
-            {CFA.title}
+            {post?.title || CFA.title}
           </h1>
-          <p className="mt-5 max-w-3xl text-sm leading-relaxed text-navy-700/70 sm:text-base">
-            {CFA.intro}
-          </p>
 
-          {items.length > 0 ? (
+          {post ? (
             <>
-              <div className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-                {visible.map((item) => (
-                  <Card key={item.id} item={item} />
-                ))}
+              <div className="mt-6 flex flex-wrap items-center gap-2">
+                <Chip>{post.category}</Chip>
+                <Chip
+                  icon={
+                    <svg {...iconProps}>
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  }
+                >
+                  {post.author}
+                </Chip>
+                <Chip
+                  icon={
+                    <svg {...iconProps}>
+                      <rect x="3" y="4" width="18" height="18" rx="2" />
+                      <path d="M16 2v4M8 2v4M3 10h18" />
+                    </svg>
+                  }
+                >
+                  {fmtDate(post.date)}
+                </Chip>
               </div>
 
-              <Pagination page={page} totalPages={totalPages} />
+              {post.image && (
+                <div className="photo relative mt-8 aspect-[16/9] overflow-hidden rounded-3xl">
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    priority
+                    sizes="(min-width: 768px) 768px, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+              )}
+
+              {competitions.length > 0 ? (
+                <>
+                  <div
+                    className="richtext mt-10"
+                    dangerouslySetInnerHTML={{ __html: head }}
+                  />
+
+                  <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
+                    {competitions.map((c) => (
+                      <figure key={c.name} className="group">
+                        <div className="photo relative aspect-[4/3] overflow-hidden rounded-2xl">
+                          <Image
+                            src={c.image}
+                            alt={c.name}
+                            fill
+                            sizes="(min-width: 640px) 33vw, 50vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                          />
+                        </div>
+                        <figcaption className="mt-3 text-center text-sm font-bold leading-snug text-navy-900">
+                          {c.name}
+                        </figcaption>
+                      </figure>
+                    ))}
+                  </div>
+
+                  {tail && (
+                    <div
+                      className="richtext mt-10"
+                      dangerouslySetInnerHTML={{ __html: tail }}
+                    />
+                  )}
+                </>
+              ) : (
+                <div
+                  className="richtext mt-10"
+                  dangerouslySetInnerHTML={{ __html: post.content }}
+                />
+              )}
+
+              <div className="mt-12 border-t border-navy-900/10 pt-8">
+                <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-navy-700/60">
+                  Bagikan
+                </h2>
+                <div className="mt-4">
+                  <ShareButtons title={post.title} />
+                </div>
+              </div>
             </>
           ) : (
             <div className="mt-12 rounded-3xl bg-cream px-6 py-16 text-center ring-1 ring-navy-900/5">
               <p className="font-display text-xl font-black text-navy-900">
-                Belum ada lomba
+                Belum ada pengumuman
               </p>
               <p className="mt-2 text-sm text-navy-700/70">
-                Cabang lomba CFA akan segera diumumkan. Nantikan informasi
+                Informasi mengenai CFA akan segera diumumkan. Nantikan kabar
                 selanjutnya di halaman ini.
               </p>
             </div>
           )}
-        </section>
+        </article>
       </main>
       <Footer />
     </>

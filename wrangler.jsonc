@@ -19,11 +19,17 @@
   // or a new machine cannot silently ship without them — which is exactly how
   // production ended up rendering mock data instead of WordPress content.
   //
-  // CF7_FORM_ID is the "Formulir Kontak Website" form (wp-admin post=1810).
-  // While it is blank, /api/contact accepts and logs submissions instead.
+  // Keep these in sync with .env.local and with the DirectAdmin environment —
+  // WP_URL points at the CMS install, which is on a temporary Hostinger domain
+  // until smkcbm.sch.id can be claimed. smkcbm.sch.id now serves the front-end
+  // itself, so it must not be used as WP_URL. See docs/domain-cutover.md.
+  //
+  // CF7_FORM_ID is blank until a form is created on the new install (the old
+  // form 1810 lived on the previous site). While blank, /api/contact accepts
+  // and logs submissions instead.
   "vars": {
-    "WP_URL": "https://smkcbm.sch.id",
+    "WP_URL": "https://beige-anteater-777428.hostingersite.com",
     "CONTACT_FORM_PROVIDER": "cf7",
-    "CF7_FORM_ID": "1810"
+    "CF7_FORM_ID": ""
   }
 }
