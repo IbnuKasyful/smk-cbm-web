@@ -73,15 +73,12 @@ export default async function NewsIndex() {
                 cerita kami rangkum di satu tempat.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
-                {featured && (
-                  <Link
-                    href={`/news/${featured.slug}`}
-                    className="btn btn-primary"
-                  >
-                    Baca berita terbaru
-                    <span aria-hidden>→</span>
-                  </Link>
-                )}
+                {/* Both this and "Semua berita" below open the archive grid,
+                    where every article is filterable and paginated. */}
+                <Link href="/news/arsip" className="btn btn-primary">
+                  Baca berita terbaru
+                  <span aria-hidden>→</span>
+                </Link>
                 <Link href="/#kegiatan" className="btn btn-outline">
                   Lihat kegiatan
                 </Link>
@@ -266,7 +263,7 @@ export default async function NewsIndex() {
               <h2 className="font-display text-3xl font-black text-navy-900 sm:text-4xl">
                 Paling Populer
               </h2>
-              <Link href="/news" className="btn btn-outline">
+              <Link href="/news/arsip" className="btn btn-outline">
                 Semua berita
                 <span aria-hidden>→</span>
               </Link>
