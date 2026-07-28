@@ -3,6 +3,8 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ShareButtons from '@/components/ShareButtons';
+import PostContent from '@/components/PostContent';
+import PostGallery from '@/components/PostGallery';
 import { getCfaPost, CFA } from '@/lib/wordpress';
 import { parseCfaContent } from '@/lib/cfa-content';
 
@@ -100,41 +102,37 @@ export default async function CfaPage() {
 
               {competitions.length > 0 ? (
                 <>
-                  <div
-                    className="richtext mt-10"
-                    dangerouslySetInnerHTML={{ __html: head }}
+                  <PostContent
+                    html={head}
+                    featured={post.image}
+                    className="mt-10"
                   />
 
-                  <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
-                    {competitions.map((c) => (
-                      <figure key={c.name} className="group">
-                        <div className="photo relative aspect-[4/3] overflow-hidden rounded-2xl">
-                          <Image
-                            src={c.image}
-                            alt={c.name}
-                            fill
-                            sizes="(min-width: 640px) 33vw, 50vw"
-                            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                          />
-                        </div>
-                        <figcaption className="mt-3 text-center text-sm font-bold leading-snug text-navy-900">
-                          {c.name}
-                        </figcaption>
-                      </figure>
-                    ))}
-                  </div>
+                  {/* Portrait ratio: these are A4-ish posters, and the default
+                      landscape crop would cut away most of each. The schedule
+                      and contact details are in small print, so the preview
+                      overlay is what makes them readable. */}
+                  <PostGallery
+                    images={competitions.map((c) => ({
+                      src: c.image,
+                      alt: `Poster lomba ${c.name} — CFA Vol. 17 SMK CBM 2026`,
+                      caption: c.name,
+                    }))}
+                    aspect="2/3"
+                    className="mt-8"
+                  />
 
-                  {tail && (
-                    <div
-                      className="richtext mt-10"
-                      dangerouslySetInnerHTML={{ __html: tail }}
-                    />
-                  )}
+                  <PostContent
+                    html={tail}
+                    featured={post.image}
+                    className="mt-10"
+                  />
                 </>
               ) : (
-                <div
-                  className="richtext mt-10"
-                  dangerouslySetInnerHTML={{ __html: post.content }}
+                <PostContent
+                  html={post.content}
+                  featured={post.image}
+                  className="mt-10"
                 />
               )}
 

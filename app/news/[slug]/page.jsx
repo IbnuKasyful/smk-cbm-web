@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import PostContent from '@/components/PostContent';
 import { getPost, getAllPostSlugs } from '@/lib/wordpress';
 
 // Pre-render known article routes; new WP posts render on-demand (ISR).
@@ -67,14 +68,19 @@ export default async function ArticlePage({ params }) {
             )}
           </div>
 
-          {/* WordPress returns HTML in post.content; mock data returns plain text. */}
-          <div
-            className="richtext mt-10"
-            dangerouslySetInnerHTML={{
-              __html: post.content?.startsWith('<')
+          {/* WordPress returns HTML in post.content; mock data returns plain text.
+              Body images are lifted out into previewable grids, and the featured
+              image is excluded so the hero above is not repeated — on posts with
+              no featured media set, lib/wordpress.js uses the first body photo
+              as the hero, so that one would otherwise appear twice. */}
+          <PostContent
+            html={
+              post.content?.startsWith('<')
                 ? post.content
-                : `<p>${post.content ?? post.excerpt}</p>`,
-            }}
+                : `<p>${post.content ?? post.excerpt}</p>`
+            }
+            featured={post.image}
+            className="mt-10"
           />
         </article>
       </main>
