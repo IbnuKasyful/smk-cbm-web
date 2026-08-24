@@ -17,6 +17,19 @@ function cmsImageHost() {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Inline WP_URL into the bundle at build time.
+  //
+  // Without this, lib/wordpress.js reads process.env.WP_URL at *request* time,
+  // so the CMS connection depends on the deployed process still having
+  // .env.local loaded. It twice did not: the site built correctly, served real
+  // CMS content, and then silently reverted to lib/mock-data.js once the
+  // prerendered pages revalidated — because wpConfigured() sees no WP_URL at
+  // runtime and every data function falls back without erroring.
+  //
+  // WP_URL is a public URL, not a credential, so baking it in is safe and makes
+  // the connection as durable as the build itself. This matches what
+  // cmsImageHost() above already assumes: a CMS move needs a rebuild anyway.
+  ...(process.env.WP_URL ? { env: { WP_URL: process.env.WP_URL } } : {}),
   // Pin the workspace root to this project so a stray lockfile in a parent
   // directory doesn't get picked up as the root.
   turbopack: {
