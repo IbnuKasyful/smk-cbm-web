@@ -119,7 +119,7 @@ Lalu:
    | Key | Value |
    |---|---|
    | `NODE_ENV` | `production` |
-   | `WP_URL` | `https://beige-anteater-777428.hostingersite.com` |
+   | `WP_URL` | `https://wp.smkcbm.sch.id` |
    | `CONTACT_FORM_PROVIDER` | `cf7` |
    | `CF7_FORM_ID` | *(kosong sampai form dibuat)* |
 
@@ -158,7 +158,7 @@ curl -s https://smkcbm.sch.id/news | grep -o 'Hello world' | head -1
 
 # CMS masih terjangkau dari server (harus JSON, bukan HTML)
 curl -s -o /dev/null -w "%{http_code}\n" \
-  https://beige-anteater-777428.hostingersite.com/wp-json/wp/v2/posts?per_page=1
+  https://wp.smkcbm.sch.id/wp-json/wp/v2/posts?per_page=1
 ```
 
 Kalau halaman berita menampilkan konten mock (nama-nama dari
